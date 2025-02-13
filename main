@@ -1,0 +1,67 @@
+import numpy as np
+import pandas as pd
+from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib as mpl
+# from sklearn.linear_model import LinearRegression
+filename="gym_members_exercise_tracking.csv"
+df=pd.read_csv(filename)
+# print(df.head())
+pd.set_option('display.max_columns', None)
+# missing_data=df.isnull
+# print(missing_data)
+# print(df.describe())
+
+#
+#
+# sns.set_theme(style="ticks")
+# f, ax = plt.subplots(figsize=(7, 5))
+# sns.despine(f)
+#
+# sns.histplot(
+#     df,
+#     x="Age", hue="Gender",
+#     multiple="stack",
+#     palette="Blues",
+#     edgecolor=".3",
+#     linewidth=.5,
+#     log_scale=True,
+# )
+# ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+# ax.set_xticks([20,30,40,60])
+# plt.show()
+
+# # workouit type vs fat%
+# sns.set_theme(style="ticks", palette="pastel")
+#
+#
+# # Draw a nested boxplot to show bills by day and time
+# sns.boxplot(x="Workout_Type", y="Fat_Percentage",
+#             hue="Gender", palette=["m", "g"],
+#             data=df)
+# sns.despine(offset=10, trim=True)
+# plt.show()
+df["Gender"]=df["Gender"].map({"Male":1,"Female":0})
+
+# df["Workout_Type"]=df["Workout_Type"].map({"Yoga":1,"HIIT":0,"Cardio":2,"Strength":3})
+df=pd.get_dummies(df,columns=['Workout_Type'])
+# print(df)
+corr_matrix = df.corr()
+sns.set_theme(palette='rocket')
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, fmt=".2f", linewidths=0.5)
+plt.title("Macierz korelacji")
+plt.show()
+
+# print(df['Fat_Percentage'].skew())
+# plt.figure(figsize= (10,8))
+# sns.histplot(df["Weight (kg)"])
+# plt.title("Age")
+# plt.show()
+
+print(df['BMI'].kurt())
+
+num_var = ['BMI','Weight (kg)',"Water_Intake (liters)","Gender","Experience_Level","Session_Duration (hours)","Workout_Frequency (days/week)","Calories_Burned","Height (m)"]
+sns.pairplot(df[num_var], kind='scatter', diag_kind='hist')
+plt.show()
